@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>A-Frame Village</title>
+    <link rel="stylesheet" href="css/style.css">
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+</head>
+<body>
+    <!-- Главная страница -->
+    <div id="home-page" class="page active">
+        <section class="hero-section">
+    <div class="hero-content">
+        <h1 class="hero-title">A-Frame Village</h1>
+        <p class="hero-subtitle">Премиум отдых в деревянных домах среди природы</p>
+        
+        <div class="stats-grid">
+            <div class="stat-card">
+                <span class="stat-number">12</span>
+                <span class="stat-label">максимум гостей</span>
+            </div>
+            <div class="stat-card">
+                <span class="stat-number">8</span>
+                <span class="stat-label">уютных домов</span>
+            </div>
+            <div class="stat-card">
+                <span class="stat-number">24/7</span>
+                <span class="stat-label">поддержка</span>
+            </div>
+        </div>
+    </div>
+</section>
+
+        <div class="action-buttons">
+            <button class="btn btn-primary" id="start-booking">Забронировать дом</button>
+        </div>
+
+        <section class="content-section">
+            <div class="section-header">
+                <h2 class="section-title">Категории домов</h2>
+            </div>
+            <div class="category-grid">
+                <div class="category-card" data-type="big">
+                    <h3>Большой дом</h3>
+                    <p>Для компании до 4 человек</p>
+                    <div class="category-price">от 10 000 ₽</div>
+                </div>
+                <div class="category-card" data-type="pair">
+                    <h3>Парный дом</h3>
+                    <p>Идеально для пар</p>
+                    <div class="category-price">от 6 000 ₽</div>
+                </div>
+                <div class="category-card" data-type="family">
+                    <h3>Семейный дом</h3>
+                    <p>Для семьи до 6 человек</p>
+                    <div class="category-price">от 14 000 ₽</div>
+                </div>
+            </div>
+        </section>
+
+        <section class="content-section">
+            <div class="section-header">
+                <h2 class="section-title">Наши преимущества</h2>
+            </div>
+            <div class="amenities-grid">
+                <div class="amenity-card">
+                    <div class="amenity-icon">🔥</div>
+                    <h4>Финская сауна</h4>
+                </div>
+                <div class="amenity-card">
+                    <div class="amenity-icon">🛁</div>
+                    <h4>Деревянный чан</h4>
+                </div>
+                <div class="amenity-card">
+                    <div class="amenity-icon">🏖️</div>
+                    <h4>Частный пляж</h4>
+                </div>
+                <div class="amenity-card">
+                    <div class="amenity-icon">🏍️</div>
+                    <h4>Квадроциклы</h4>
+                </div>
+                <div class="amenity-card">
+                    <div class="amenity-icon">🏄</div>
+                    <h4>SUP-борды</h4>
+                </div>
+                <div class="amenity-card">
+                    <div class="amenity-icon">🎠</div>
+                    <h4>Детские площадки</h4>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- Страница бронирования -->
+    <div id="booking-page" class="page">
+        <div class="booking-section">
+            <!-- Шаг 1: Выбор типа дома -->
+            <div class="booking-step active" id="step-type">
+                <div class="step-header">
+                    <h2 class="step-title">Выберите тип дома</h2>
+                    <p class="step-subtitle">Подберите идеальный вариант для вашего отдыха</p>
+                </div>
+                
+                <div class="house-type-selection">
+                    <div class="type-grid">
+                        <!-- Большой дом -->
+                        <div class="type-card" data-type="big">
+                            <div class="type-icon">🏠</div>
+                            <div class="type-name">Большой дом</div>
+                            <div class="type-description">Просторные двухэтажные дома с сауной и террасой. Идеально для компании друзей</div>
+                            <div class="type-capacity">👥 До 4 гостей</div>
+                            <div class="type-price">от 10 000 ₽</div>
+                        </div>
+                        
+                        <!-- Парный дом -->
+                        <div class="type-card" data-type="pair">
+                            <div class="type-icon">💑</div>
+                            <div class="type-name">Парный дом</div>
+                            <div class="type-description">Уютные домики для романтического отдыха. Камин и приватная территория</div>
+                            <div class="type-capacity">👥 2 гостя</div>
+                            <div class="type-price">от 6 000 ₽</div>
+                        </div>
+                        
+                        <!-- Семейный дом -->
+                        <div class="type-card" data-type="family">
+                            <div class="type-icon">👨‍👩‍👧‍👦</div>
+                            <div class="type-name">Семейный дом</div>
+                            <div class="type-description">Просторные дома с детской комнатой и игровой зоной. Для комфортного семейного отдыха</div>
+                            <div class="type-capacity">👥 До 6 гостей</div>
+                            <div class="type-price">от 14 000 ₽</div>
+                        </div>
+                    </div>
+                    
+                    <!-- Контейнер для выбора времени (появляется только для больших домов) -->
+                    <div class="time-selection-container" id="time-selection">
+    <div class="step-header">
+        <h3 class="step-title">Выберите время заезда</h3>
+        <p class="step-subtitle">Для больших домов доступны разные варианты</p>
+    </div>
+    
+    <div class="time-options">
+        <div class="time-option" data-time="12:00-10:00" data-houses="1,2">
+            <div class="time-slot">🕛 Заезд 12:00 - Выезд 10:00</div>
+            <div class="house-numbers">Доступно: Дома №1-2</div>
+        </div>
+        
+        <div class="time-option" data-time="14:00-12:00" data-houses="3,4">
+            <div class="time-slot">🕑 Заезд 14:00 - Выезд 12:00</div>
+            <div class="house-numbers">Доступно: Дома №3-4</div>
+        </div>
+        
+        <div class="time-option" data-time="16:00-14:00" data-houses="5,6">
+            <div class="time-slot">🕓 Заезд 16:00 - Выезд 14:00</div>
+            <div class="house-numbers">Доступно: Дома №5-6</div>
+        </div>
+    </div>
+</div>
+                    
+                    <!-- Кнопка продолжения -->
+                    <div class="continue-btn-container">
+                        <button class="continue-btn" id="continue-to-houses" disabled>
+                            Продолжить к выбору дома
+                        </button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Шаг 2: Выбор конкретного дома -->
+            <div class="booking-step" id="step-houses">
+                <div class="step-header">
+                    <h2 class="step-title">Выберите дом</h2>
+                    <p class="step-subtitle" id="houses-subtitle">Доступные варианты по вашему выбору</p>
+                </div>
+                
+                <div class="houses-grid" id="houses-list">
+                    <!-- Дома будут подгружаться динамически -->
+                </div>
+                
+                <div class="booking-nav">
+                    <button class="btn btn-back" id="back-to-type">← Назад</button>
+                    <button class="btn btn-primary" id="continue-to-dates" disabled>Продолжить к датам →</button>
+                </div>
+            </div>
+
+            <!-- Шаг 3: Выбор дат -->
+            <div class="booking-step" id="step-dates">
+                <div class="step-header">
+                    <h2 class="step-title">Выберите даты проживания</h2>
+                    <p class="step-subtitle">Укажите даты заезда и выезда</p>
+                </div>
+
+                <div class="date-selection">
+                    <div class="date-input-group">
+                        <label for="checkin-date">📅 Дата заезда</label>
+                        <input type="date" id="checkin-date" class="date-input">
+                    </div>
+                    <div class="date-input-group">
+                        <label for="checkout-date">📅 Дата выезда</label>
+                        <input type="date" id="checkout-date" class="date-input">
+                    </div>
+                </div>
+
+                <div class="booking-nav">
+                    <button class="btn btn-back" id="back-to-houses">← Назад</button>
+                    <button class="btn btn-primary" id="continue-to-house-detail" disabled>Выбрать дом →</button>
+                </div>
+            </div>
+
+            <!-- Шаг 4: Детальная карточка дома с услугами -->
+            <div class="booking-step" id="step-house-detail">
+                <div class="house-detail-card">
+                    <!-- Галерея фотографий -->
+                    <div class="house-gallery" id="house-gallery">
+                        <div class="gallery-slide active">
+                            🏠
+                        </div>
+                        <div class="gallery-slide">
+                            🛋️
+                        </div>
+                        <div class="gallery-slide">
+                            🌳
+                        </div>
+                        
+                        <div class="gallery-nav">
+                            <button class="gallery-btn" id="gallery-prev">❮</button>
+                            <button class="gallery-btn" id="gallery-next">❯</button>
+                        </div>
+                        
+                        <div class="gallery-dots">
+                            <div class="gallery-dot active" data-slide="0"></div>
+                            <div class="gallery-dot" data-slide="1"></div>
+                            <div class="gallery-dot" data-slide="2"></div>
+                        </div>
+                    </div>
+                    
+                    <div class="house-detail-content">
+                        <div class="house-detail-header">
+                            <h2 class="house-detail-title" id="detail-house-name">Название дома</h2>
+                            <div class="house-detail-price" id="detail-house-price">0 ₽</div>
+                        </div>
+                        
+                        <div class="house-detail-features">
+                            <div class="feature-item">
+                                <span class="feature-icon">🛏️</span>
+                                <span id="detail-house-beds">-</span>
+                            </div>
+                            <div class="feature-item">
+                                <span class="feature-icon">📏</span>
+                                <span id="detail-house-size">-</span>
+                            </div>
+                            <div class="feature-item">
+                                <span class="feature-icon">👥</span>
+                                <span id="detail-house-capacity">-</span>
+                            </div>
+                            <div class="feature-item">
+                                <span class="feature-icon">🕛</span>
+                                <span id="detail-house-time">-</span>
+                            </div>
+                        </div>
+                        
+                        <div class="amenities-section">
+                            <h3 class="section-title">Удобства</h3>
+                            <div class="amenities-list" id="detail-house-amenities">
+                                <!-- Удобства загружаются динамически -->
+                            </div>
+                        </div>
+                        <div class="guests-selection" id="guests-selection" style="display: none;">
+    <div class="guests-header">
+        <div class="guests-title">
+            👥 Количество гостей
+        </div>
+        <div class="guests-controls">
+            <button class="guests-btn" id="guests-decrease">-</button>
+            <span class="guests-count" id="guests-count">8</span>
+            <button class="guests-btn" id="guests-increase">+</button>
+        </div>
+    </div>
+    <div class="guests-note">
+        Базовое значение: 8 гостей, максимальное: 15 гостей
+    </div>
+</div>
+                        
+                        <!-- Секция дополнительных услуг -->
+                        <div class="services-section">
+                            <h3 class="section-title">Дополнительные услуги</h3>
+                            
+                            <div class="service-option">
+                                <div class="service-header">
+                                    <div class="service-name">Деревянный чан</div>
+                                    <div class="service-price">от 1 000 ₽</div>
+                                </div>
+                                <div class="service-variants">
+                                    <div class="service-variant" data-hours="0" data-price="0">
+                                        <div class="variant-name">Не выбирать</div>
+                                        <div class="variant-price">0 ₽</div>
+                                    </div>
+                                    <div class="service-variant" data-hours="2" data-price="1000">
+                                        <div class="variant-name">2 часа</div>
+                                        <div class="variant-duration">18:00-20:00</div>
+                                        <div class="variant-price">1 000 ₽</div>
+                                    </div>
+                                    <div class="service-variant" data-hours="4" data-price="2000">
+                                        <div class="variant-name">4 часа</div>
+                                        <div class="variant-duration">18:00-22:00</div>
+                                        <div class="variant-price">2 000 ₽</div>
+                                    </div>
+                                    <div class="service-variant" data-hours="8" data-price="4000">
+                                        <div class="variant-name">Вся ночь</div>
+                                        <div class="variant-duration">18:00-02:00</div>
+                                        <div class="variant-price">4 000 ₽</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Итоговая стоимость -->
+                        <div class="booking-summary">
+                            <div class="summary-item">
+                                <span>Проживание (1 ночь):</span>
+                                <span id="summary-base-price">0 ₽</span>
+                            </div>
+                            <div class="summary-item">
+                                <span>Доп. услуги:</span>
+                                <span id="summary-services-price">0 ₽</span>
+                            </div>
+                            
+                            <div class="acoins-section">
+                                <div class="acoins-toggle">
+                                    <input type="checkbox" id="use-acoins">
+                                    <label for="use-acoins">Использовать Acoin для скидки</label>
+                                </div>
+                                <div class="acoins-balance">
+                                    Доступно: <span id="acoins-balance">0</span> Acoin (1 Acoin = 1 ₽)
+                                </div>
+                                <input type="number" class="acoins-input" id="acoins-amount" 
+                                       placeholder="Введите количество Acoin" min="0" max="0" disabled>
+                            </div>
+                            
+                            <div class="summary-item total">
+                                <span>Итого к оплате:</span>
+                                <span id="summary-total-price">0 ₽</span>
+                            </div>
+                        </div>
+                        
+                        <button class="book-btn" id="book-now-btn">
+                            🏷️ Забронировать за <span id="book-final-price">0</span> ₽
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="booking-nav" style="margin: 20px;">
+                    <button class="btn btn-back" id="back-to-dates">← Назад к выбору</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Страница профиля -->
+    <div id="profile-page" class="page">
+        <div class="profile-section">
+            <div class="profile-header">
+                <div class="profile-avatar" id="user-avatar">U</div>
+                <h1 class="profile-name" id="user-name">Пользователь</h1>
+                <div class="profile-level" id="user-level">Бронза</div>
+            </div>
+            
+            <div class="profile-stats">
+                <div class="profile-stat-card">
+                    <span class="stat-value" id="acoins-count">0</span>
+                    <span class="stat-label">Acoin</span>
+                </div>
+                <div class="profile-stat-card">
+                    <span class="stat-value" id="referrals-count">0</span>
+                    <span class="stat-label">Рефералы</span>
+                </div>
+            </div>
+            
+            <div class="level-section">
+                <div class="level-title">Ваш уровень</div>
+                <div class="level-badges">
+                    <div class="level-badge active" data-level="bronze">Бронза</div>
+                    <div class="level-badge" data-level="silver">Серебро</div>
+                    <div class="level-badge" data-level="gold">Золото</div>
+                    <div class="level-badge" data-level="diamond">Бриллиант</div>
+                </div>
+            </div>
+            
+            <div class="referral-section">
+                <div class="section-title">Реферальная система</div>
+                <p class="referral-description">Приглашайте друзей и получайте Acoin за их бронирования</p>
+                <div class="referral-link-container">
+                    <input type="text" class="referral-link" id="referral-link" readonly>
+                    <button class="btn-copy" id="copy-referral">Копировать</button>
+                </div>
+            </div>
+            
+            <div class="feedback-section">
+                <div class="section-title">Обратная связь</div>
+                <textarea class="feedback-input" id="feedback-text" placeholder="Расскажите, как мы можем стать лучше..."></textarea>
+                <button class="btn btn-primary" id="send-feedback">Отправить отзыв</button>
+            </div>
+        </div>
+    </div>
+    <div id="bookings-page" class="page">
+    <div class="profile-section">
+        <div class="profile-header">
+            <h1 class="profile-name">Мои бронирования</h1>
+            <p class="hero-subtitle">История ваших заказов</p>
+        </div>
+        
+        <div class="bookings-list" id="bookings-list">
+            <!-- Бронирования будут загружаться динамически -->
+        </div>
+    </div>
+</div>
+
+    <!-- Навигация -->
+    <nav class="bottom-nav">
+    <button class="nav-btn active" data-page="home">
+        <span>🏠</span>
+        <span>Главная</span>
+    </button>
+    <button class="nav-btn" data-page="bookings">
+        <span>📋</span>
+        <span>Бронирования</span>
+    </button>
+    <button class="nav-btn" data-page="profile">
+        <span>👤</span>
+        <span>Профиль</span>
+    </button>
+</nav>
+
+    <!-- Подключаем скрипты -->
+    <script src="js/database.js"></script>
+    <script src="js/app.js"></script>
+    <script src="js/booking.js"></script>
+    <script src="js/house-detail.js"></script>
+    <script src="js/profile.js"></script>
+    <script src="js/payment.js"></script>
+    <script src="js/bookings.js"></script>
+</body>
+</html>
