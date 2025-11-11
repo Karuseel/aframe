@@ -439,5 +439,42 @@
     <script src="js/profile.js"></script>
     <script src="js/payment.js"></script>
     <script src="js/bookings.js"></script>
+
+    <script>
+// Отладочный код для мобильных устройств
+document.addEventListener('DOMContentLoaded', function() {
+    console.log('DOM loaded - checking mobile issues');
+    
+    // Проверяем наличие элементов
+    const continueBtn = document.getElementById('continue-to-houses');
+    console.log('Continue button exists:', !!continueBtn);
+    
+    if (continueBtn) {
+        console.log('Continue button styles:', {
+            display: getComputedStyle(continueBtn).display,
+            visibility: getComputedStyle(continueBtn).visibility,
+            opacity: getComputedStyle(continueBtn).opacity,
+            pointerEvents: getComputedStyle(continueBtn).pointerEvents,
+            position: getComputedStyle(continueBtn).position,
+            zIndex: getComputedStyle(continueBtn).zIndex
+        });
+    }
+    
+    // Логируем все клики для отладки
+    document.addEventListener('click', function(e) {
+        console.log('Click detected on:', e.target.tagName, e.target.className);
+    });
+    
+    // Логируем touch события
+    document.addEventListener('touchstart', function(e) {
+        console.log('Touch start on:', e.target.tagName, e.target.className);
+    });
+    
+    document.addEventListener('touchend', function(e) {
+        console.log('Touch end on:', e.target.tagName, e.target.className);
+    });
+});
+</script>
+
 </body>
 </html>
