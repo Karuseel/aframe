@@ -12,68 +12,131 @@ class BookingSystem {
             services: { chan: { hours: 0, price: 0 } },
             totalAmount: 0,
             finalAmount: 0,
-            acoinsUsed: 0
+            acoinsUsed: 0,
+            guestsCount: 8
         };
         this.bindEvents();
         this.initDateInputs();
     }
 
     bindEvents() {
+        console.log('Initializing booking system events...');
+
         // Выбор типа дома
         document.querySelectorAll('.type-card').forEach(card => {
             card.addEventListener('click', (e) => {
-                this.selectHouseType(e.currentTarget.dataset.type);
+                e.preventDefault();
+                e.stopPropagation();
+                console.log('Type card clicked:', card.dataset.type);
+                this.selectHouseType(card.dataset.type);
+            });
+            
+            card.addEventListener('touchend', (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                console.log('Type card touched:', card.dataset.type);
+                this.selectHouseType(card.dataset.type);
             });
         });
 
         // Выбор времени (для больших домов)
         document.addEventListener('click', (e) => {
-            if (e.target.closest('.time-option')) {
-                this.selectTimeOption(e.target.closest('.time-option'));
+            const timeOption = e.target.closest('.time-option');
+            if (timeOption) {
+                e.preventDefault();
+                e.stopPropagation();
+                console.log('Time option clicked');
+                this.selectTimeOption(timeOption);
+            }
+        });
+
+        document.addEventListener('touchend', (e) => {
+            const timeOption = e.target.closest('.time-option');
+            if (timeOption) {
+                e.preventDefault();
+                e.stopPropagation();
+                console.log('Time option touched');
+                this.selectTimeOption(timeOption);
             }
         });
 
         // Кнопка продолжения к выбору домов
-        document.getElementById('continue-to-houses').addEventListener('click', () => {
-            this.proceedToHousesSelection();
-        });
+        const continueToHousesBtn = document.getElementById('continue-to-houses');
+        if (continueToHousesBtn) {
+            continueToHousesBtn.addEventListener('click', (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                console.log('Continue to houses clicked');
+                this.proceedToHousesSelection();
+            });
+            
+            continueToHousesBtn.addEventListener('touchend', (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                console.log('Continue to houses touched');
+                this.proceedToHousesSelection();
+            });
+        } else {
+            console.error('Continue to houses button not found!');
+        }
 
         // Кнопка продолжения к выбору дат
-        document.getElementById('continue-to-dates').addEventListener('click', () => {
-            this.showStep(3);
-        });
+        const continueToDatesBtn = document.getElementById('continue-to-dates');
+        if (continueToDatesBtn) {
+            continueToDatesBtn.addEventListener('click', () => {
+                this.showStep(3);
+            });
+        }
 
-        // Кнопка продолжения к детальной карточке дома
-        document.getElementById('continue-to-house-detail').addEventListener('click', () => {
-            this.proceedToHouseDetail();
-        });
+        // Кнопка продолжения к детальной карточке дома - ИСПРАВЛЕНО!
+        const continueToHouseDetailBtn = document.getElementById('continue-to-house-detail');
+        if (continueToHouseDetailBtn) {
+            continueToHouseDetailBtn.addEventListener('click', () => {
+                this.proceedToHouseDetail();
+            });
+        }
 
         // Кнопки назад
-        document.getElementById('back-to-type').addEventListener('click', () => {
-            this.showStep(1);
-        });
+        const backToTypeBtn = document.getElementById('back-to-type');
+        if (backToTypeBtn) {
+            backToTypeBtn.addEventListener('click', () => {
+                this.showStep(1);
+            });
+        }
 
-        document.getElementById('back-to-houses').addEventListener('click', () => {
-            this.showStep(2);
-        });
+        const backToHousesBtn = document.getElementById('back-to-houses');
+        if (backToHousesBtn) {
+            backToHousesBtn.addEventListener('click', () => {
+                this.showStep(2);
+            });
+        }
 
-        document.getElementById('back-to-dates').addEventListener('click', () => {
-            this.showStep(3);
-        });
+        const backToDatesBtn = document.getElementById('back-to-dates');
+        if (backToDatesBtn) {
+            backToDatesBtn.addEventListener('click', () => {
+                this.showStep(3);
+            });
+        }
 
         // Обработчики изменения дат
         const checkinDate = document.getElementById('checkin-date');
         const checkoutDate = document.getElementById('checkout-date');
         
-        checkinDate.addEventListener('change', (e) => {
-            this.bookingData.checkInDate = e.target.value;
-            this.updateDatesValidation();
-        });
+        if (checkinDate) {
+            checkinDate.addEventListener('change', (e) => {
+                this.bookingData.checkInDate = e.target.value;
+                this.updateDatesValidation();
+            });
+        }
         
-        checkoutDate.addEventListener('change', (e) => {
-            this.bookingData.checkOutDate = e.target.value;
-            this.updateDatesValidation();
-        });
+        if (checkoutDate) {
+            checkoutDate.addEventListener('change', (e) => {
+                this.bookingData.checkOutDate = e.target.value;
+                this.updateDatesValidation();
+            });
+        }
+
+        console.log('All booking events bound successfully');
     }
 
     initDateInputs() {
@@ -85,56 +148,76 @@ class BookingSystem {
         const checkinInput = document.getElementById('checkin-date');
         const checkoutInput = document.getElementById('checkout-date');
         
-        checkinInput.min = minDate;
-        checkoutInput.min = minDate;
+        if (checkinInput) {
+            checkinInput.min = minDate;
+            checkinInput.addEventListener('focus', () => {
+                checkinInput.showPicker?.();
+            });
+        }
+        if (checkoutInput) {
+            checkoutInput.min = minDate;
+            checkoutInput.addEventListener('focus', () => {
+                checkoutInput.showPicker?.();
+            });
+        }
     }
 
     selectHouseType(houseType) {
-    // Сбрасываем предыдущий выбор
-    document.querySelectorAll('.type-card').forEach(card => {
-        card.classList.remove('selected');
-    });
-    
-    // Выделяем выбранный тип
-    const selectedCard = document.querySelector(`.type-card[data-type="${houseType}"]`);
-    selectedCard.classList.add('selected');
-    
-    this.bookingData.houseType = houseType;
-    
-    // Показываем/скрываем выбор времени для больших домов
-    const timeSelection = document.getElementById('time-selection');
-    if (houseType === 'big') {
-        // Даем время для анимации
-        setTimeout(() => {
-            timeSelection.classList.add('show');
-        }, 100);
-        this.bookingData.checkInTime = null;
-        this.bookingData.checkOutTime = null;
-        this.bookingData.availableHouses = [];
-    } else {
-        timeSelection.classList.remove('show');
-        // Для парных и семейных устанавливаем время по умолчанию
-        this.bookingData.checkInTime = '12:00';
-        this.bookingData.checkOutTime = '10:00';
-        // Устанавливаем правильные ID домов для каждого типа
-        if (houseType === 'pair') {
-            this.bookingData.availableHouses = [7, 8];
-        } else if (houseType === 'family') {
-            this.bookingData.availableHouses = [9, 10];
+        console.log('Selecting house type:', houseType);
+        
+        // Сбрасываем предыдущий выбор
+        document.querySelectorAll('.type-card').forEach(card => {
+            card.classList.remove('selected');
+        });
+        
+        // Выделяем выбранный тип
+        const selectedCard = document.querySelector(`.type-card[data-type="${houseType}"]`);
+        if (selectedCard) {
+            selectedCard.classList.add('selected');
+            
+            // Добавляем визуальную обратную связь для мобильных
+            selectedCard.style.transform = 'scale(0.98)';
+            setTimeout(() => {
+                selectedCard.style.transform = '';
+            }, 150);
         }
+        
+        this.bookingData.houseType = houseType;
+        
+        // Показываем/скрываем выбор времени для больших домов
+        const timeSelection = document.getElementById('time-selection');
+        if (timeSelection) {
+            if (houseType === 'big') {
+                setTimeout(() => {
+                    timeSelection.classList.add('show');
+                    // Прокручиваем к времени заезда
+                    setTimeout(() => {
+                        timeSelection.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                    }, 200);
+                }, 100);
+                this.bookingData.checkInTime = null;
+                this.bookingData.checkOutTime = null;
+                this.bookingData.availableHouses = [];
+            } else {
+                timeSelection.classList.remove('show');
+                // Для парных и семейных устанавливаем время по умолчанию
+                this.bookingData.checkInTime = '12:00';
+                this.bookingData.checkOutTime = '10:00';
+                // Устанавливаем правильные ID домов для каждого типа
+                if (houseType === 'pair') {
+                    this.bookingData.availableHouses = [7, 8];
+                } else if (houseType === 'family') {
+                    this.bookingData.availableHouses = [9, 10];
+                }
+            }
+        }
+        
+        this.updateContinueButton();
     }
-    
-    this.updateContinueButton();
-    
-    // Прокручиваем к времени заезда если нужно
-    if (houseType === 'big') {
-        setTimeout(() => {
-            timeSelection.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-        }, 300);
-    }
-}
 
     selectTimeOption(timeOption) {
+        console.log('Selecting time option');
+        
         if (this.bookingData.houseType !== 'big') return;
         
         // Сбрасываем предыдущий выбор времени
@@ -144,6 +227,12 @@ class BookingSystem {
         
         // Выделяем выбранное время
         timeOption.classList.add('selected');
+        
+        // Визуальная обратная связь для мобильных
+        timeOption.style.transform = 'scale(0.98)';
+        setTimeout(() => {
+            timeOption.style.transform = '';
+        }, 150);
         
         const [checkIn, checkOut] = timeOption.dataset.time.split('-');
         this.bookingData.checkInTime = checkIn;
@@ -155,23 +244,44 @@ class BookingSystem {
 
     updateContinueButton() {
         const continueBtn = document.getElementById('continue-to-houses');
+        if (!continueBtn) {
+            console.error('Continue button not found!');
+            return;
+        }
+        
         let canContinue = false;
         
         if (this.bookingData.houseType) {
             if (this.bookingData.houseType === 'big') {
                 // Для больших домов нужно выбрать и тип, и время
                 canContinue = this.bookingData.checkInTime && this.bookingData.checkOutTime;
+                console.log('Big house selection - can continue:', canContinue, 'Time selected:', this.bookingData.checkInTime);
             } else {
                 // Для парных и семейных достаточно выбора типа
                 canContinue = true;
+                console.log('Other house type - can continue:', canContinue);
             }
         }
         
         continueBtn.disabled = !canContinue;
+        
+        if (canContinue) {
+            continueBtn.style.opacity = '1';
+            continueBtn.style.cursor = 'pointer';
+            continueBtn.style.transform = 'translateY(0)';
+        } else {
+            continueBtn.style.opacity = '0.6';
+            continueBtn.style.cursor = 'not-allowed';
+            continueBtn.style.transform = 'translateY(2px)';
+        }
+        
+        console.log('Continue button updated - disabled:', continueBtn.disabled);
     }
 
     updateDatesValidation() {
         const continueBtn = document.getElementById('continue-to-house-detail');
+        if (!continueBtn) return;
+        
         const checkinDate = this.bookingData.checkInDate;
         const checkoutDate = this.bookingData.checkOutDate;
         
@@ -184,9 +294,30 @@ class BookingSystem {
         }
         
         continueBtn.disabled = !canContinue;
+        
+        if (canContinue) {
+            continueBtn.style.opacity = '1';
+            continueBtn.style.cursor = 'pointer';
+        } else {
+            continueBtn.style.opacity = '0.6';
+            continueBtn.style.cursor = 'not-allowed';
+        }
     }
 
     proceedToHousesSelection() {
+        console.log('Proceeding to houses selection');
+        
+        // Проверяем, можно ли продолжить
+        if (this.bookingData.houseType === 'big' && (!this.bookingData.checkInTime || !this.bookingData.checkOutTime)) {
+            app.showNotification('Пожалуйста, выберите время заезда');
+            return;
+        }
+        
+        if (!this.bookingData.houseType) {
+            app.showNotification('Пожалуйста, выберите тип дома');
+            return;
+        }
+        
         // Загружаем доступные дома
         this.loadAvailableHouses();
         
@@ -198,94 +329,178 @@ class BookingSystem {
             'family': 'семейных домов'
         };
         
-        subtitle.textContent = `Доступные варианты ${typeNames[this.bookingData.houseType]}`;
+        if (subtitle) {
+            subtitle.textContent = `Доступные варианты ${typeNames[this.bookingData.houseType]}`;
+        }
         
         // Переходим к шагу выбора дома
         this.showStep(2);
+        
+        // Прокручиваем вверх
+        setTimeout(() => {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }, 300);
     }
 
     proceedToHouseDetail() {
+        console.log('Proceeding to house detail');
+        
         // Проверяем, что дом выбран
         if (!this.bookingData.selectedHouse) {
-            this.showNotification('Пожалуйста, выберите дом');
+            app.showNotification('Пожалуйста, выберите дом');
             return;
         }
-        
+
+        // Проверяем, что даты выбраны
+        if (!this.bookingData.checkInDate || !this.bookingData.checkOutDate) {
+            app.showNotification('Пожалуйста, выберите даты заезда и выезда');
+            return;
+        }
+
         // Переходим к детальной карточке дома
         if (window.houseDetail) {
-            houseDetail.showHouseDetail(this.bookingData.selectedHouse);
+            houseDetail.showFullScreenHouse(this.bookingData.selectedHouse);
+        } else {
+            console.error('HouseDetail not initialized');
+            app.showNotification('Ошибка загрузки деталей дома');
         }
     }
 
     loadAvailableHouses() {
-    const housesList = document.getElementById('houses-list');
-    housesList.innerHTML = '';
-    
-    let houses = [];
-    
-    if (this.bookingData.houseType === 'big') {
-        // Для больших домов фильтруем по доступным номерам
-        const allHouses = db.getHousesByType('big');
-        houses = allHouses.filter(house => 
-            this.bookingData.availableHouses.includes(house.id)
-        );
-    } else {
-        // Для парных и семейных показываем все дома этого типа
-        houses = db.getHousesByType(this.bookingData.houseType);
-    }
-    
-    if (houses.length === 0) {
-        housesList.innerHTML = '<p style="text-align: center; color: var(--gray-600); padding: 40px;">Нет доступных домов по вашему выбору</p>';
-        return;
-    }
-    
-    houses.forEach(house => {
-        const houseCard = document.createElement('div');
-        houseCard.className = 'house-card';
-        houseCard.innerHTML = `
-            <div class="house-image">
-                ${house.images && house.images.length > 0 ? 
-                    `<img src="${house.images[0]}" alt="Дом №${house.id}" 
-                         onerror="this.style.display='none'; this.parentNode.innerHTML='${this.getHouseIcon(house.type)}';">` :
-                    `<div class="image-placeholder">${this.getHouseIcon(house.type)}</div>`
-                }
-            </div>
-            <div class="house-content">
-                <h3 class="house-title">Дом №${house.id}</h3>
-                <p class="house-description">${house.description}</p>
-                
-                <div class="house-features">
-                    <span class="house-feature">🛏️ ${house.beds}</span>
-                    <span class="house-feature">📏 ${house.size}</span>
-                    <span class="house-feature">👥 ${house.capacity} чел</span>
-                    <span class="house-feature">🕛 ${house.checkIn} - ${house.checkOut}</span>
-                </div>
-                
-                <div class="amenities-grid-small">
-                    ${house.amenities.slice(0, 4).map(amenity => 
-                        `<div class="amenity-item">${amenity}</div>`
-                    ).join('')}
-                </div>
-                
-                <div class="price-section">
-                    <div class="house-capacity">
-                        ${this.getCapacityIcon(house.type)} 
-                        ${this.getCapacityText(house.type, house.capacity)}
-                    </div>
-                    <div class="house-price">${house.price.toLocaleString()} ₽</div>
-                </div>
-            </div>
-        `;
+        const housesList = document.getElementById('houses-list');
+        if (!housesList) {
+            console.error('Houses list container not found!');
+            return;
+        }
         
-        houseCard.addEventListener('click', () => {
-            this.selectHouse(house, houseCard);
+        housesList.innerHTML = '';
+        
+        let houses = [];
+        
+        if (this.bookingData.houseType === 'big') {
+            // Для больших домов фильтруем по доступным номерам
+            const allHouses = db.getHousesByType('big');
+            houses = allHouses.filter(house => 
+                this.bookingData.availableHouses.includes(house.id)
+            );
+        } else {
+            // Для парных и семейных показываем все дома этого типа
+            houses = db.getHousesByType(this.bookingData.houseType);
+        }
+        
+        if (houses.length === 0) {
+            housesList.innerHTML = `
+                <div class="no-bookings" style="text-align: center; padding: 40px 20px;">
+                    <div style="font-size: 48px; margin-bottom: 16px;">🏠</div>
+                    <h3 style="color: var(--text-primary); margin-bottom: 8px;">Нет доступных домов</h3>
+                    <p style="color: var(--text-tertiary);">Попробуйте выбрать другой тип дома или время заезда</p>
+                </div>
+            `;
+            return;
+        }
+        
+        houses.forEach(house => {
+            const houseCard = document.createElement('div');
+            houseCard.className = 'house-card';
+            
+            // ИСПРАВЛЕННЫЙ HTML - убраны проблемы с изображениями
+            houseCard.innerHTML = `
+                <div class="house-image">
+                    <div class="house-badge">${this.getHouseTypeBadge(house.type)}</div>
+                    <div class="house-rating">⭐ 4.8</div>
+                    ${this.getHouseImageHTML(house)}
+                </div>
+                <div class="house-content">
+                    <div class="house-header">
+                        <h3 class="house-title">Дом №${house.id}</h3>
+                        <div class="house-price">
+                            ${house.price.toLocaleString()} ₽
+                            <span class="house-price-period">за ночь</span>
+                        </div>
+                    </div>
+                    
+                    <div class="house-description">${house.description}</div>
+                    
+                    <div class="house-features">
+                        <div class="house-feature">
+                            <span class="feature-icon">🛏️</span>
+                            <span class="feature-text">${house.beds}</span>
+                        </div>
+                        <div class="house-feature">
+                            <span class="feature-icon">📏</span>
+                            <span class="feature-text">${house.size}</span>
+                        </div>
+                        <div class="house-feature">
+                            <span class="feature-icon">👥</span>
+                            <span class="feature-text">${house.capacity} чел</span>
+                        </div>
+                        <div class="house-feature">
+                            <span class="feature-icon">🕛</span>
+                            <span class="feature-text">${house.checkIn}-${house.checkOut}</span>
+                        </div>
+                    </div>
+                    
+                    <div class="amenities-grid-small">
+                        ${house.amenities.slice(0, 4).map(amenity => 
+                            `<div class="amenity-item">${amenity}</div>`
+                        ).join('')}
+                    </div>
+                    
+                    <div class="house-footer">
+                        <div class="house-capacity">
+                            <span class="capacity-icon">${this.getCapacityIcon(house.type)}</span>
+                            <span>${this.getCapacityText(house.type, house.capacity)}</span>
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            houseCard.addEventListener('click', () => {
+                this.selectHouse(house, houseCard);
+            });
+            
+            houseCard.addEventListener('touchend', (e) => {
+                e.preventDefault();
+                this.selectHouse(house, houseCard);
+            });
+            
+            housesList.appendChild(houseCard);
         });
         
-        housesList.appendChild(houseCard);
-    });
+        console.log(`Loaded ${houses.length} houses`);
+    }
+
+    getHouseImageHTML(house) {
+        if (house.images && house.images.length > 0 && house.images[0]) {
+            return `
+                <img src="${house.images[0]}" alt="Дом №${house.id}" 
+                     onerror="this.onerror=null; this.style.display='none'; const placeholder=this.nextElementSibling; placeholder.style.display='flex';">
+                <div class="image-placeholder" style="display: none;">
+                    ${this.getHouseIcon(house.type)}
+                </div>
+            `;
+        } else {
+            return `
+                <div class="image-placeholder">
+                    ${this.getHouseIcon(house.type)}
+                </div>
+            `;
+        }
+    }
+
+// Добавь новый метод для бейджей типов домов
+getHouseTypeBadge(type) {
+    const badges = {
+        'big': 'Большой',
+        'pair': 'Для пар', 
+        'family': 'Семейный'
+    };
+    return badges[type] || 'Дом';
 }
 
     selectHouse(house, houseElement) {
+        console.log('Selecting house:', house.id);
+        
         // Сбрасываем предыдущий выбор
         document.querySelectorAll('.house-card').forEach(card => {
             card.classList.remove('selected');
@@ -296,10 +511,17 @@ class BookingSystem {
         this.bookingData.selectedHouse = house;
         
         // Активируем кнопку продолжения
-        document.getElementById('continue-to-dates').disabled = false;
+        const continueBtn = document.getElementById('continue-to-dates');
+        if (continueBtn) {
+            continueBtn.disabled = false;
+            continueBtn.style.opacity = '1';
+            continueBtn.style.cursor = 'pointer';
+        }
     }
 
     showStep(stepNumber) {
+        console.log('Showing step:', stepNumber);
+        
         document.querySelectorAll('.booking-step').forEach(step => {
             step.classList.remove('active');
         });
@@ -312,13 +534,17 @@ class BookingSystem {
         };
         
         const stepElement = document.getElementById(`step-${stepNames[stepNumber]}`);
-        stepElement.classList.add('active');
-        this.currentStep = stepNumber;
-    }
-
-    showNotification(message) {
-        console.log('Notification:', message);
-        alert(message);
+        if (stepElement) {
+            stepElement.classList.add('active');
+            this.currentStep = stepNumber;
+            
+            // Прокручиваем вверх при смене шага
+            setTimeout(() => {
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }, 100);
+        } else {
+            console.error(`Step element not found: step-${stepNames[stepNumber]}`);
+        }
     }
 
     getHouseIcon(type) {
@@ -349,6 +575,8 @@ class BookingSystem {
     }
 
     resetBooking() {
+        console.log('Resetting booking data');
+        
         this.bookingData = {
             houseType: null,
             checkInTime: null,
@@ -360,7 +588,8 @@ class BookingSystem {
             services: { chan: { hours: 0, price: 0 } },
             totalAmount: 0,
             finalAmount: 0,
-            acoinsUsed: 0
+            acoinsUsed: 0,
+            guestsCount: 8
         };
         
         // Сбрасываем UI
@@ -369,15 +598,22 @@ class BookingSystem {
         });
         
         const timeSelection = document.getElementById('time-selection');
-        timeSelection.classList.remove('show');
+        if (timeSelection) timeSelection.classList.remove('show');
         
-        document.getElementById('continue-to-houses').disabled = true;
-        document.getElementById('continue-to-dates').disabled = true;
-        document.getElementById('continue-to-house-detail').disabled = true;
+        const continueToHousesBtn = document.getElementById('continue-to-houses');
+        if (continueToHousesBtn) continueToHousesBtn.disabled = true;
+        
+        const continueToDatesBtn = document.getElementById('continue-to-dates');
+        if (continueToDatesBtn) continueToDatesBtn.disabled = true;
+        
+        const continueToHouseDetailBtn = document.getElementById('continue-to-house-detail');
+        if (continueToHouseDetailBtn) continueToHouseDetailBtn.disabled = true;
         
         // Сбрасываем даты
-        document.getElementById('checkin-date').value = '';
-        document.getElementById('checkout-date').value = '';
+        const checkinInput = document.getElementById('checkin-date');
+        const checkoutInput = document.getElementById('checkout-date');
+        if (checkinInput) checkinInput.value = '';
+        if (checkoutInput) checkoutInput.value = '';
         
         this.showStep(1);
     }
@@ -385,5 +621,35 @@ class BookingSystem {
 
 // Инициализация системы бронирования
 document.addEventListener('DOMContentLoaded', function() {
+    console.log('DOM loaded - initializing booking system');
     window.bookingSystem = new BookingSystem();
+    
+    // Fallback инициализация для мобильных
+    setTimeout(() => {
+        console.log('Running mobile fallback check');
+        const continueBtn = document.getElementById('continue-to-houses');
+        if (continueBtn && !continueBtn._eventsBound) {
+            console.log('Binding fallback events for continue button');
+            
+            continueBtn.addEventListener('click', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                console.log('Fallback: Continue button clicked');
+                if (window.bookingSystem) {
+                    window.bookingSystem.proceedToHousesSelection();
+                }
+            });
+            
+            continueBtn.addEventListener('touchend', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                console.log('Fallback: Continue button touched');
+                if (window.bookingSystem) {
+                    window.bookingSystem.proceedToHousesSelection();
+                }
+            });
+            
+            continueBtn._eventsBound = true;
+        }
+    }, 1000);
 });

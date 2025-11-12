@@ -358,50 +358,63 @@
 
     <!-- Страница профиля -->
     <div id="profile-page" class="page">
-        <div class="profile-section">
-            <div class="profile-header">
-                <div class="profile-avatar" id="user-avatar">U</div>
-                <h1 class="profile-name" id="user-name">Пользователь</h1>
-                <div class="profile-level" id="user-level">Бронза</div>
+    <div class="profile-section">
+        <div class="profile-header">
+            <div class="profile-avatar" id="user-avatar">U</div>
+            <h1 class="profile-name" id="user-name">Пользователь</h1>
+            <div class="profile-level" id="user-level">Бронза</div>
+        </div>
+        
+        <div class="profile-stats">
+            <div class="profile-stat-card">
+                <span class="stat-value" id="acoins-count">0</span>
+                <span class="stat-label">Acoin</span>
             </div>
-            
-            <div class="profile-stats">
-                <div class="profile-stat-card">
-                    <span class="stat-value" id="acoins-count">0</span>
-                    <span class="stat-label">Acoin</span>
-                </div>
-                <div class="profile-stat-card">
-                    <span class="stat-value" id="referrals-count">0</span>
-                    <span class="stat-label">Рефералы</span>
-                </div>
-            </div>
-            
-            <div class="level-section">
-                <div class="level-title">Ваш уровень</div>
-                <div class="level-badges">
-                    <div class="level-badge active" data-level="bronze">Бронза</div>
-                    <div class="level-badge" data-level="silver">Серебро</div>
-                    <div class="level-badge" data-level="gold">Золото</div>
-                    <div class="level-badge" data-level="diamond">Бриллиант</div>
-                </div>
-            </div>
-            
-            <div class="referral-section">
-                <div class="section-title">Реферальная система</div>
-                <p class="referral-description">Приглашайте друзей и получайте Acoin за их бронирования</p>
-                <div class="referral-link-container">
-                    <input type="text" class="referral-link" id="referral-link" readonly>
-                    <button class="btn-copy" id="copy-referral">Копировать</button>
-                </div>
-            </div>
-            
-            <div class="feedback-section">
-                <div class="section-title">Обратная связь</div>
-                <textarea class="feedback-input" id="feedback-text" placeholder="Расскажите, как мы можем стать лучше..."></textarea>
-                <button class="btn btn-primary" id="send-feedback">Отправить отзыв</button>
+            <div class="profile-stat-card">
+                <span class="stat-value" id="referrals-count">0</span>
+                <span class="stat-label">Рефералы</span>
             </div>
         </div>
+        
+        <!-- Обновленная система уровней -->
+        <div class="level-progress-section">
+            <div class="level-header">
+                <div class="level-title">Система уровней</div>
+                <div class="current-level" id="current-level-display">Бронза</div>
+            </div>
+            
+            <div class="progress-container">
+                <!-- Прогресс бар будет загружен динамически -->
+            </div>
+            
+            <div class="levels-grid">
+                <!-- Карточки уровней будут загружены динамически -->
+            </div>
+            
+            <div class="level-benefits">
+                <div class="benefits-title">Ваши преимущества</div>
+                <div class="benefits-list">
+                    <!-- Преимущества будут загружены динамически -->
+                </div>
+            </div>
+        </div>
+        
+        <div class="referral-section">
+            <div class="section-title">Реферальная система</div>
+            <p class="referral-description">Приглашайте друзей и получайте Acoin за их бронирования</p>
+            <div class="referral-link-container">
+                <input type="text" class="referral-link" id="referral-link" readonly>
+                <button class="btn-copy" id="copy-referral">Копировать</button>
+            </div>
+        </div>
+        
+        <div class="feedback-section">
+            <div class="section-title">Обратная связь</div>
+            <textarea class="feedback-input" id="feedback-text" placeholder="Расскажите, как мы можем стать лучше..."></textarea>
+            <button class="btn btn-primary" id="send-feedback">Отправить отзыв</button>
+        </div>
     </div>
+</div>
     <div id="bookings-page" class="page">
     <div class="profile-section">
         <div class="profile-header">

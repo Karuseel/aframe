@@ -20,94 +20,139 @@ class PaymentSystem {
     modal.className = 'payment-modal';
     modal.innerHTML = `
         <div class="payment-content">
-            <h3>💳 Оплата бронирования</h3>
+            <div class="payment-header">
+                <div class="payment-icon">💳</div>
+                <h2 class="payment-title">Оплата бронирования</h2>
+                <p class="payment-subtitle">Завершите бронирование, переведя сумму на наши реквизиты</p>
+            </div>
             
             <div class="payment-summary">
-                <div class="summary-item">
-                    <span>Дом:</span>
-                    <span><strong>Дом №${bookingData.selectedHouse.id}</strong></span>
+                <div class="summary-header">
+                    <div class="summary-title">Детали бронирования</div>
+                    <div class="summary-amount">${bookingData.finalAmount.toLocaleString()} ₽</div>
                 </div>
-                <div class="summary-item">
-                    <span>Тип:</span>
-                    <span>${this.getHouseTypeName(bookingData.selectedHouse.type)}</span>
-                </div>
-                ${bookingData.guestsCount ? `
-                <div class="summary-item">
-                    <span>Количество гостей:</span>
-                    <span>${bookingData.guestsCount} человек</span>
-                </div>
-                ` : ''}
-                <div class="summary-item">
-                    <span>Время заезда/выезда:</span>
-                    <span>${bookingData.selectedHouse.checkIn} - ${bookingData.selectedHouse.checkOut}</span>
-                </div>
-                ${bookingData.checkInDate ? `
-                <div class="summary-item">
-                    <span>Даты проживания:</span>
-                    <span>${this.formatDate(bookingData.checkInDate)} - ${this.formatDate(bookingData.checkOutDate)}</span>
-                </div>
-                ` : ''}
-                <div class="summary-item">
-                    <span>Стоимость проживания:</span>
-                    <span>${bookingData.selectedHouse.price.toLocaleString()} ₽</span>
-                </div>
-                ${this.calculateGuestsExtra(bookingData) > 0 ? `
-                <div class="summary-item">
-                    <span>Дополнительные гости:</span>
-                    <span>+${this.calculateGuestsExtra(bookingData).toLocaleString()} ₽</span>
-                </div>
-                ` : ''}
-                ${bookingData.services.chan.price > 0 ? `
-                <div class="summary-item">
-                    <span>Деревянный чан (${bookingData.services.chan.hours}ч):</span>
-                    <span>${bookingData.services.chan.price.toLocaleString()} ₽</span>
-                </div>
-                ` : ''}
-                ${bookingData.acoinsUsed > 0 ? `
-                <div class="summary-item">
-                    <span>Скидка Acoin:</span>
-                    <span style="color: #27ae60;">-${bookingData.acoinsUsed.toLocaleString()} ₽</span>
-                </div>
-                ` : ''}
-                <div class="summary-item total">
-                    <span>Итого к оплате:</span>
-                    <span style="color: var(--gray-900); font-size: 1.4rem; font-weight: 800;">
-                        ${bookingData.finalAmount.toLocaleString()} ₽
-                    </span>
+                <div class="summary-items">
+                    <div class="summary-item">
+                        <span class="summary-label">Дом №${bookingData.selectedHouse.id}</span>
+                        <span class="summary-value">${this.getHouseTypeName(bookingData.selectedHouse.type)}</span>
+                    </div>
+                    ${bookingData.guestsCount ? `
+                    <div class="summary-item">
+                        <span class="summary-label">Количество гостей</span>
+                        <span class="summary-value">${bookingData.guestsCount} человек</span>
+                    </div>
+                    ` : ''}
+                    <div class="summary-item">
+                        <span class="summary-label">Время заезда/выезда</span>
+                        <span class="summary-value">${bookingData.selectedHouse.checkIn} - ${bookingData.selectedHouse.checkOut}</span>
+                    </div>
+                    ${bookingData.checkInDate ? `
+                    <div class="summary-item">
+                        <span class="summary-label">Даты проживания</span>
+                        <span class="summary-value">${this.formatDate(bookingData.checkInDate)} - ${this.formatDate(bookingData.checkOutDate)}</span>
+                    </div>
+                    ` : ''}
+                    <div class="summary-item">
+                        <span class="summary-label">Стоимость проживания</span>
+                        <span class="summary-value">${bookingData.selectedHouse.price.toLocaleString()} ₽</span>
+                    </div>
+                    ${this.calculateGuestsExtra(bookingData) > 0 ? `
+                    <div class="summary-item">
+                        <span class="summary-label">Дополнительные гости</span>
+                        <span class="summary-value">+${this.calculateGuestsExtra(bookingData).toLocaleString()} ₽</span>
+                    </div>
+                    ` : ''}
+                    ${bookingData.services.chan.price > 0 ? `
+                    <div class="summary-item">
+                        <span class="summary-label">Деревянный чан (${bookingData.services.chan.hours}ч)</span>
+                        <span class="summary-value">${bookingData.services.chan.price.toLocaleString()} ₽</span>
+                    </div>
+                    ` : ''}
+                    ${bookingData.acoinsUsed > 0 ? `
+                    <div class="summary-item">
+                        <span class="summary-label">Скидка Acoin</span>
+                        <span class="summary-value discount">-${bookingData.acoinsUsed.toLocaleString()} ₽</span>
+                    </div>
+                    ` : ''}
+                    <div class="summary-item total">
+                        <span class="summary-label">Итого к оплате</span>
+                        <span class="summary-value total">${bookingData.finalAmount.toLocaleString()} ₽</span>
+                    </div>
                 </div>
             </div>
 
             <div class="contact-info">
-                <h4>📞 Контактная информация</h4>
-                <input type="tel" id="user-phone" placeholder="Ваш телефон *" required
-                       pattern="[0-9+]{10,15}" title="Введите корректный номер телефона">
-                <input type="email" id="user-email" placeholder="Email (необязательно)">
-                <small style="color: var(--gray-600); font-size: 0.85rem; display: block; margin-top: 8px; line-height: 1.4;">
-                    * Телефон обязателен для связи по поводу бронирования
-                </small>
+                <div class="contact-header">
+                    <div class="contact-icon">📞</div>
+                    <div class="contact-title">Контактная информация</div>
+                </div>
+                <div class="contact-fields">
+                    <div class="contact-field">
+                        <label class="contact-label required">Ваш телефон</label>
+                        <input type="tel" id="user-phone" class="contact-input" 
+                               placeholder="+7 (999) 999-99-99" required
+                               pattern="[0-9+]{10,15}">
+                    </div>
+                    <div class="contact-field">
+                        <label class="contact-label">Email (необязательно)</label>
+                        <input type="email" id="user-email" class="contact-input" 
+                               placeholder="your.email@example.com">
+                    </div>
+                </div>
+                <div class="contact-note">
+                    * Телефон обязателен для связи по поводу бронирования и подтверждения заезда
+                </div>
             </div>
 
             <div class="payment-instructions">
-                <h4>🏦 Реквизиты для перевода</h4>
+                <div class="instructions-header">
+                    <div class="instructions-icon">🏦</div>
+                    <div class="instructions-title">Реквизиты для перевода</div>
+                </div>
                 <div class="bank-details">
-                    <p><strong>Банк:</strong> Тинькофф</p>
-                    <p><strong>Номер карты:</strong> <code>5536 9138 1234 5678</code></p>
-                    <p><strong>Получатель:</strong> Иванов И.И.</p>
-                    <p><strong>Сумма к переводу:</strong> <strong style="color: var(--gray-900); font-size: 1.1rem;">${bookingData.finalAmount.toLocaleString()} руб.</strong></p>
-                    <p><strong>Назначение платежа:</strong> Бронирование A-Frame Village</p>
-                    <p style="font-size: 0.9rem; color: var(--gray-600); margin-top: 15px; padding-top: 15px; border-top: 1px solid var(--gray-300); line-height: 1.5;">
-                        💡 <em>В комментарии к переводу укажите: "Бронирование Дом №${bookingData.selectedHouse.id}, ${this.formatDate(bookingData.checkInDate)} - ${this.formatDate(bookingData.checkOutDate)}"</em>
-                    </p>
+                    <div class="bank-detail">
+                        <span class="bank-label">Банк</span>
+                        <span class="bank-value">Тинькофф</span>
+                    </div>
+                    <div class="bank-detail">
+                        <span class="bank-label">Номер карты</span>
+                        <span class="bank-value code">5536 9138 1234 5678</span>
+                    </div>
+                    <div class="bank-detail">
+                        <span class="bank-label">Получатель</span>
+                        <span class="bank-value">Иванов И.И.</span>
+                    </div>
+                    <div class="bank-detail">
+                        <span class="bank-label">Сумма к переводу</span>
+                        <span class="bank-value amount">${bookingData.finalAmount.toLocaleString()} руб.</span>
+                    </div>
+                    <div class="bank-detail">
+                        <span class="bank-label">Назначение платежа</span>
+                        <span class="bank-value">Бронирование A-Frame Village</span>
+                    </div>
+                </div>
+                <div class="instructions-note">
+                    <div class="note-text">
+                        💡 <strong>Важно:</strong> В комментарии к переводу укажите: 
+                        "Бронирование Дом №${bookingData.selectedHouse.id}, ${this.formatDate(bookingData.checkInDate)} - ${this.formatDate(bookingData.checkOutDate)}"
+                    </div>
                 </div>
             </div>
 
             <div class="payment-actions">
-                <button class="btn btn-secondary" id="cancel-payment">
+                <button class="payment-btn payment-btn-cancel" id="cancel-payment">
                     ❌ Отмена
                 </button>
-                <button class="btn btn-primary" id="confirm-payment">
+                <button class="payment-btn payment-btn-confirm" id="confirm-payment">
                     ✅ Подтвердить перевод ${bookingData.finalAmount.toLocaleString()} ₽
                 </button>
+            </div>
+
+            <div class="payment-security">
+                <div class="security-text">
+                    <span class="security-icon">🔒</span>
+                    Безопасное соединение • Ваши данные защищены
+                </div>
             </div>
         </div>
     `;
@@ -121,10 +166,16 @@ class PaymentSystem {
         if (phoneInput) phoneInput.focus();
     }, 400);
 }
+
     bindPaymentEvents(modal) {
         // Отмена оплаты
         modal.querySelector('#cancel-payment').addEventListener('click', () => {
-            document.body.removeChild(modal);
+            modal.style.animation = 'paymentSlideIn 0.3s var(--ease-out) reverse';
+            setTimeout(() => {
+                if (modal.parentNode) {
+                    document.body.removeChild(modal);
+                }
+            }, 300);
         });
 
         // Подтверждение оплаты
@@ -135,16 +186,32 @@ class PaymentSystem {
         // Закрытие по клику вне модального окна
         modal.addEventListener('click', (e) => {
             if (e.target === modal) {
-                document.body.removeChild(modal);
+                modal.style.animation = 'paymentSlideIn 0.3s var(--ease-out) reverse';
+                setTimeout(() => {
+                    if (modal.parentNode) {
+                        document.body.removeChild(modal);
+                    }
+                }, 300);
             }
         });
+
+        // Анимация при наведении на кнопку подтверждения
+        const confirmBtn = modal.querySelector('#confirm-payment');
+        confirmBtn.addEventListener('mouseenter', () => {
+            confirmBtn.classList.add('payment-success');
+        });
+        
+        confirmBtn.addEventListener('animationend', () => {
+            confirmBtn.classList.remove('payment-success');
+        });
     }
+
     calculateGuestsExtra(bookingData) {
-    if (bookingData.selectedHouse.type === 'big' && bookingData.guestsCount > 8) {
-        return (bookingData.guestsCount - 8) * 500;
+        if (bookingData.selectedHouse.type === 'big' && bookingData.guestsCount > 8) {
+            return (bookingData.guestsCount - 8) * 500;
+        }
+        return 0;
     }
-    return 0;
-}
 
     processPayment(modal) {
         const phone = modal.querySelector('#user-phone').value.trim();
@@ -189,22 +256,31 @@ class PaymentSystem {
         const acoinsEarned = Math.floor(bookingData.finalAmount * 0.05);
         db.addAcoins(app.currentUser.id, acoinsEarned);
 
-        // Закрываем модальное окно
-        document.body.removeChild(modal);
+        // Анимация успешной оплаты
+        const confirmBtn = modal.querySelector('#confirm-payment');
+        confirmBtn.innerHTML = '✅ Оплата подтверждается...';
+        confirmBtn.disabled = true;
 
-        // Показываем уведомление
-        this.showNotification(
-            `Бронирование создано! 🎉\n\n` +
-            `Ожидайте подтверждения администратора.\n` +
-            `Вам начислено ${acoinsEarned} Acoin.\n\n` +
-            `Номер брони: #${booking.id}`
-        );
+        setTimeout(() => {
+            // Закрываем модальное окно
+            if (modal.parentNode) {
+                document.body.removeChild(modal);
+            }
 
-        // Переходим на главную страницу
-        app.showPage('home');
+            // Показываем уведомление
+            this.showNotification(
+                `Бронирование создано! 🎉\n\n` +
+                `Ожидайте подтверждения администратора.\n` +
+                `Вам начислено ${acoinsEarned} Acoin.\n\n` +
+                `Номер брони: #${booking.id}`
+            );
 
-        // Уведомляем администратора
-        this.notifyAdmin(booking);
+            // Переходим на главную страницу
+            app.showPage('home');
+
+            // Уведомляем администратора
+            this.notifyAdmin(booking);
+        }, 2000);
     }
 
     notifyAdmin(booking) {
@@ -253,8 +329,7 @@ class PaymentSystem {
     }
 
     showNotification(message) {
-        console.log('Notification:', message);
-        alert(message);
+        app.showNotification(message);
     }
 }
 
